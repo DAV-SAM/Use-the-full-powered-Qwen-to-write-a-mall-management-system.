@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .login-wrap {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-box {
+            background: #fff;
+            padding: 64px 48px;
+            border-radius: 24px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .brand-logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .brand-tagline {
+            font-size: 15px;
+            color: #86868b;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+            font-family: inherit;
+            background: #fbfbfd;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #0071e3;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            margin-top: 12px;
+        }
+
+        .btn:hover {
+            background: #0077ed;
+            transform: scale(1.02);
+        }
+
+        .message {
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            display: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .nav {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0 40px;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 52px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #1d1d1f;
+            text-decoration: none;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #0071e3;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .page-title {
+            font-size: 40px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 32px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #86868b;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1d1d1f;
+            letter-spacing: -1px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .tab-btn {
+            padding: 10px 24px;
+            border-radius: 20px;
+            border: none;
+            background: #fff;
+            color: #86868b;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .tab-btn:hover {
+            color: #1d1d1f;
+        }
+
+        .tab-btn.active {
+            background: #1d1d1f;
+            color: #fff;
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .table-wrap {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead th {
+            text-align: left;
+            padding: 16px 24px;
+            font-weight: 600;
+            color: #86868b;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #fbfbfd;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tbody td {
+            padding: 16px 24px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #1d1d1f;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover td {
+            background: #fbfbfd;
+        }
+
+        .mono {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 12px;
+            color: #86868b;
+            word-break: break-all;
+            max-width: 280px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-green {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-gray {
+            background: #f5f5f7;
+            color: #86868b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #86868b;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 20px;
+            }
+            table {
+                font-size: 13px;
+            }
+            thead th, tbody td {
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loginView" class="login-wrap">
+        <div class="login-box">
+            <div class="brand">
+                <div class="brand-logo">Apple Shop</div>
+                <div class="brand-tagline">管理员登录</div>
+            </div>
+            <div id="message" class="message"></div>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="adminUser">管理员账号</label>
+                    <input type="text" id="adminUser" value="root" required>
+                </div>
+                <div class="form-group">
+                    <label for="adminPass">管理员密码</label>
+                    <input type="password" id="adminPass" value="root" required>
+                </div>
+                <button type="submit" class="btn">进入后台</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboardView" style="display:none;">
+        <nav class="nav">
+            <div class="nav-inner">
+                <a href="admin.html" class="logo">Apple Shop Admin</a>
+                <button class="logout-btn" onclick="logout()">退出登录</button>
+            </div>
+        </nav>
+
+        <div class="container">
+            <h1 class="page-title">概览</h1>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">总用户数</div>
+                    <div class="stat-value" id="statUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">总订单数</div>
+                    <div class="stat-value" id="statOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">总销售额</div>
+                    <div class="stat-value" id="statRevenue">¥0</div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="users">用户管理</button>
+                <button class="tab-btn" data-tab="orders">订单管理</button>
+            </div>
+
+            <div id="usersPanel" class="panel active">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>用户名</th>
+                                <th>密码 (哈希值)</th>
+                                <th>注册时间</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="ordersPanel" class="panel">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>订单ID</th>
+                                <th>用户</th>
+                                <th>商品</th>
+                                <th>数量</th>
+                                <th>总价</th>
+                                <th>下单时间</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const messageDiv = document.getElementById('message');
+        const loginView = document.getElementById('loginView');
+        const dashboardView = document.getElementById('dashboardView');
+
+        function showMessage(text) {
+            messageDiv.textContent = text;
+            messageDiv.className = 'message error';
+            messageDiv.style.display = 'block';
+        }
+
+        if (localStorage.getItem('adminLoggedIn') === 'true') {
+            showDashboard();
+        }
+
+        document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('adminUser').value;
+            const password = document.getElementById('adminPass').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    showDashboard();
+                } else {
+                    showMessage('管理员账号或密码错误');
+                }
+            } catch (error) {
+                showMessage('网络错误，请稍后重试');
+            }
+        });
+
+        function showDashboard() {
+            loginView.style.display = 'none';
+            dashboardView.style.display = 'block';
+            loadUsers();
+            loadOrders();
+        }
+
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.reload();
+        }
+
+        async function loadUsers() {
+            try {
+                const response = await fetch('http://localhost:5000/admin/users');
+                const users = await response.json();
+                document.getElementById('statUsers').textContent = users.length;
+
+                const tbody = document.getElementById('usersTableBody');
+                if (users.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">👤</div>暂无用户数据</div></td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = users.map(u => `
+                    <tr>
+                        <td>${u.id}</td>
+                        <td><strong>${u.username}</strong></td>
+                        <td><span class="mono">${u.password}</span></td>
+                        <td>${u.created_at || '-'}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('加载用户失败:', error);
+            }
+        }
+
+        async function loadOrders() {
+            try {
+                const response = await fetch('http://localhost:5000/admin/orders');
+                const orders = await response.json();
+                document.getElementById('statOrders').textContent = orders.length;
+
+                const totalRevenue = orders.reduce((sum, o) => sum + (o.totalPrice || 0), 0);
+                document.getElementById('statRevenue').textContent = '¥' + totalRevenue.toLocaleString();
+
+                const tbody = document.getElementById('ordersTableBody');
+                if (orders.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">📦</div>暂无订单数据</div></td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = orders.map(o => `
+                    <tr>
+                        <td>#${o.id}</td>
+                        <td>${o.username ? `<span class="badge badge-green">${o.username}</span>` : '<span class="badge badge-gray">未登录</span>'}</td>
+                        <td>${o.productName || '-'}</td>
+                        <td>${o.quantity}</td>
+                        <td><strong>¥${o.totalPrice.toLocaleString()}</strong></td>
+                        <td>${o.created_at || '-'}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('加载订单失败:', error);
+            }
+        }
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.tab + 'Panel').classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
